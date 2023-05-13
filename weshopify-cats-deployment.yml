@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  weshopify-cats-svc
+  namespace: default
+  labels:
+    app:  weshopify-cats-svc
+spec:
+  selector:
+    matchLabels:
+      app: weshopify-cats-svc
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app:  weshopify-cats-svc
+    spec:
+      # initContainers:
+        # Init containers are exactly like regular containers, except:
+          # - Init containers always run to completion.
+          # - Each init container must complete successfully before the next one starts.
+      containers:
+       - name:  weshopify-cats-svc
+         image:  narsimybooks/weshopify-categories-svc-img
+         ports:
+          - containerPort:  5016
+         env:
+           - name: CATEGOIRIES_DB_HOST
+             value: weshopify-category-db-svc
+           - name: CATEGORIES_DB_PASSWORD
+             value: root
+           - name: CATEGORIES_DB_SCHEMA
+             value: weshopify-app-categories
+           - name: REDIS_SERVER_HOST
+             value: weshopify-cache-svc
+           - name: REDIS_SERVER_PORT
+             value: "6379" 
+           - name: REDIS_SERVER_PASSWORD
+             value: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+           - name: SERVICE_REGISTRY_HOST
+             value: weshopify-registry-svc
+           - name: SERVICE_REGISTRY_PORT
+             value: "8761"
+           - name: AXON_SERVER_HOST
+             value: weshopify-axon-server
+           - name: AXON_SERVER_PORT
+             value: "8124"           
+           - name: ZIPKIN_HOST
+             value: weshopify-zipkin-service
+           - name: ZIPKIN_PORT
+             value: "9411"
+
+
+      restartPolicy: Always
